@@ -15,6 +15,6 @@ class WEATHERVR_API UWServiceCommons : public UObject
 {
 	GENERATED_BODY()
 public:
-	void UseGet(FString Uri, TFunction<void(FString)> ResponseProcessor);
-	void ManageResponseErrors(const FHttpRequestPtr& HttpRequest );
+	static void UseGet(const FString& Uri, TFunction<void(const FString&)> ResponseProcessor);
+	static void ManageResponseErrors(const FHttpRequestPtr& HttpRequest );
 };

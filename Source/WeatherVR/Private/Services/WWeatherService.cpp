@@ -4,6 +4,7 @@
 #include "Services/WWeatherService.h"
 #include "HttpModule.h"
 #include "Interfaces/IHttpResponse.h"
+#include "Services/WServiceCommons.h"
 #include "Services/WServiceConstants.h"
 
 void UWWeatherService::FetchCityWeatherStats(const FString& City, TFunction<void(bool, bool)> Callback)
@@ -15,40 +16,16 @@ void UWWeatherService::FetchCityWeatherStats(const FString& City, TFunction<void
 
 void UWWeatherService::FetchCityCoordinates(const FString& City, TFunction<void(double, double)> Callback)
 {
-    //London,gb
     const FString UriBase = FString::Printf(
         TEXT("%s/geo/1.0/direct?q=%s&limit=1&appid=%s"),
         *UWServiceConstants::OPEN_WEATHER_BASE_URL,
         *City,
         *UWServiceConstants::OPEN_WEATHER_KEY);
-    
-    FHttpModule& HttpModule = FHttpModule::Get();
-    
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> const Request = HttpModule.CreateRequest();
-    Request->SetVerb(TEXT("GET"));
-    Request->SetHeader(TEXT("Content-Type"), TEXT("application/json; charset=utf-8"));
-    Request->SetURL(UriBase);
-    
-    Request->OnProcessRequestComplete().BindLambda(
-        [Callback](
-            const FHttpRequestPtr& HttpRequest,
-            const FHttpResponsePtr& HttpResponse,
-            const bool bConnectedSuccessfully) mutable {
 
-        if (bConnectedSuccessfully) {
-            ProcessCityCoordinatesResponse(HttpResponse->GetContentAsString(), Callback);
-            return;
-        }
-            
-        switch (HttpRequest->GetStatus()) {
-        case EHttpRequestStatus::Failed_ConnectionError:
-            UE_LOG(LogTemp, Error, TEXT("Connection failed."));
-        default:
-            UE_LOG(LogTemp, Error, TEXT("Request failed."));
-        }
+    UWServiceCommons::UseGet(UriBase, [Callback](const FString& ResponseData)
+    {
+        ProcessCityCoordinatesResponse(ResponseData, Callback);
     });
-    
-    Request->ProcessRequest();
 }
 
 void UWWeatherService::ProcessCityCoordinatesResponse(const FString& Response, TFunction<void(double, double)> Callback)
@@ -88,32 +65,10 @@ void UWWeatherService::FetchCityWeatherStats(const double Lat, const double Lon,
         Lon,
         *UWServiceConstants::OPEN_WEATHER_KEY);
     
-    FHttpModule& HttpModule = FHttpModule::Get();
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> const Request = HttpModule.CreateRequest();
-    Request->SetVerb(TEXT("GET"));
-    Request->SetHeader(TEXT("Content-Type"), TEXT("application/json; charset=utf-8"));
-    Request->SetURL(UriBase);
-    
-    Request->OnProcessRequestComplete().BindLambda(
-        [Callback](
-            const FHttpRequestPtr& HttpRequest,
-            const FHttpResponsePtr& HttpResponse,
-            const bool bConnectedSuccessfully) mutable {
-
-        if (bConnectedSuccessfully) {
-            ProcessCityWeatherStatsResponse(HttpResponse->GetContentAsString(), Callback);
-            return;
-        }
-            
-        switch (HttpRequest->GetStatus()) {
-        case EHttpRequestStatus::Failed_ConnectionError:
-            UE_LOG(LogTemp, Error, TEXT("Connection failed."));
-        default:
-            UE_LOG(LogTemp, Error, TEXT("Request failed."));
-        }
+    UWServiceCommons::UseGet(UriBase, [Callback](const FString& ResponseData)
+    {
+        ProcessCityWeatherStatsResponse(ResponseData, Callback);
     });
-    
-    Request->ProcessRequest();
 }
 
 void UWWeatherService::ProcessCityWeatherStatsResponse(const FString& Response, TFunction<void(bool, bool)> Callback)

@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-#include "UI/WButtonCityBase.h"
 #include "UI/WCitiesSelectorBase.h"
+#include "UI/WButtonCityBase.h"
 
 void UWCitiesSelectorBase::SubscribeButtons(UVerticalBox* VerticalBox)
 {

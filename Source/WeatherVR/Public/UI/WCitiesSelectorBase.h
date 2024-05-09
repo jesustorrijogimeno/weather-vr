@@ -32,16 +32,17 @@ public:
 protected:
 	FString CityName;
 	UPROPERTY()
-	TObjectPtr<UTextBlock> CityTextBlock;
+	TObjectPtr<UTextBlock> CityTextBlockProp;
 	UPROPERTY()
-	TObjectPtr<UTextBlock> TemperatureTextBlock;
+	TObjectPtr<UTextBlock> TemperatureTextBlockProp;
 	UPROPERTY()
-	TObjectPtr<UTextBlock> ConditionTextBlock;
+	TObjectPtr<UTextBlock> ConditionTextBlockProp;
 	UPROPERTY()
-	TObjectPtr<UTextBlock> WindDirectionTextBlock;
+	TObjectPtr<UTextBlock> WindDirectionTextBlockProp;
 	UPROPERTY()
-	TObjectPtr<UTextBlock> WindSpeedTextBlock;
+	TObjectPtr<UTextBlock> WindSpeedTextBlockProp;
 	UPROPERTY()
-	TObjectPtr<UTextBlock> CurrentTimeTextBlock;
+	TObjectPtr<UTextBlock> CurrentTimeTextBlockProp;
 	void FillInCityStatsWidget(const FCityStats& CityStats) const;
+	static float RoundFloat(float FloatToRound);
 };

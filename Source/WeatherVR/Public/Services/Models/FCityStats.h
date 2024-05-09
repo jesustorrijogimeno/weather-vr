@@ -30,9 +30,9 @@ struct FCityStats
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float WindSpeed;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 CurrentTime;
+	int64 TimeZone;
 
 	FCityStats()
 	{
@@ -40,6 +40,6 @@ struct FCityStats
 		Temperature = 0;
 		WindDirection = 0;
 		WindSpeed = 0;
-		CurrentTime = 0;
+		TimeZone = 0;
 	}
 };

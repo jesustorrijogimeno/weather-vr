@@ -15,34 +15,46 @@ void UWCitiesSelectorBase::SubscribeButtons(
 	UTextBlock* CurrentTimeTextBlock
 )
 {
-	this->CityTextBlock				= CityTextBlock;
-	this->TemperatureTextBlock		= TemperatureTextBlock;
-	this->ConditionTextBlock		= ConditionTextBlock;
-	this->WindDirectionTextBlock	= WindDirectionTextBlock;
-	this->WindSpeedTextBlock		= WindSpeedTextBlock;
-	this->CurrentTimeTextBlock		= CurrentTimeTextBlock;
+	this->CityTextBlockProp				= CityTextBlock;
+	this->TemperatureTextBlockProp		= TemperatureTextBlock;
+	this->ConditionTextBlockProp		= ConditionTextBlock;
+	this->WindDirectionTextBlockProp	= WindDirectionTextBlock;
+	this->WindSpeedTextBlockProp		= WindSpeedTextBlock;
+	this->CurrentTimeTextBlockProp		= CurrentTimeTextBlock;
 	for (int32 i = 0; i < VerticalBox->GetChildrenCount(); ++i)
 	{
 		UWidget* ChildWidget = VerticalBox->GetChildAt(i);
-		if (ChildWidget->IsA<UWButtonCityBase>())
+		if (!ChildWidget->IsA<UWButtonCityBase>())
 		{
-			UWButtonCityBase* Button = Cast<UWButtonCityBase>(ChildWidget);
-			Button->OnButtonClicked.AddLambda(
-				[this](const FString& CityName)
-					{
-						this->CityName = CityName;
-						UWWeatherService::FetchCityWeatherStats(CityName, this->FillInCityStatsWidget);
-					});
+			continue;
 		}
+		
+		UWButtonCityBase* Button = Cast<UWButtonCityBase>(ChildWidget);
+		Button->OnButtonClicked.AddLambda(
+			[this](const FString& CityName)
+				{
+					this->CityName = CityName;
+					UWWeatherService::FetchCityWeatherStats(CityName, [this](const FCityStats& CityStats)
+					{
+						FillInCityStatsWidget(CityStats);
+					});
+				});
 	}
 }
 
 void UWCitiesSelectorBase::FillInCityStatsWidget(const FCityStats& CityStats) const
 {
-	this->CityTextBlock->SetText(FText::FromString(this->CityName));
-	this->TemperatureTextBlock->SetText(FText::FromString(FString::Printf(TEXT("%f F"), CityStats.Temperature)));
-	this->ConditionTextBlock->SetText(FText::FromString(CityStats.ConditionDescription));
-	this->WindDirectionTextBlock->SetText(FText::AsNumber(CityStats.WindDirection));
-	this->WindSpeedTextBlock->SetText(FText::FromString(FString::Printf(TEXT("%f m/s"), CityStats.WindSpeed)));
-	this->CurrentTimeTextBlock->SetText(FText::AsDateTime(FDateTime::FromUnixTimestamp(CityStats.CurrentTime)));
+	this->CityTextBlockProp->SetText(FText::FromString(this->CityName));
+	this->TemperatureTextBlockProp->SetText(FText::FromString(FString::Printf(TEXT("%.2f F"), RoundFloat(CityStats.Temperature))));
+	this->ConditionTextBlockProp->SetText(FText::FromString(CityStats.ConditionDescription));
+	this->WindDirectionTextBlockProp->SetText(FText::FromString(FString::Printf(TEXT("%.2f"), RoundFloat(CityStats.WindDirection))));
+	this->WindSpeedTextBlockProp->SetText(FText::FromString(FString::Printf(TEXT("%.2f m/s"), RoundFloat(CityStats.WindSpeed))));
+	const FDateTime CurrentDate = FDateTime::UtcNow() + FTimespan(0, 0, CityStats.TimeZone);
+	this->CurrentTimeTextBlockProp->SetText(FText::FromString(CurrentDate.ToString()));
+}
+
+float UWCitiesSelectorBase::RoundFloat(const float FloatToRound)
+{
+	const int RoundToInt =  FMath::RoundToZero(FloatToRound * 100);
+	return RoundToInt / 100.0f;
 }

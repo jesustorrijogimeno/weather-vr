@@ -97,7 +97,7 @@ void UWWeatherService::ProcessCityWeatherStatsResponse(const FString& Response, 
     CityStats.Temperature           = MainObject->GetNumberField(TEXT("temp"));
     CityStats.WindSpeed             = WindObject->GetNumberField(TEXT("speed"));
     CityStats.WindDirection         = WindObject->GetNumberField(TEXT("deg"));
-    CityStats.CurrentTime           = JsonObject->GetNumberField(TEXT("dt"));
+    CityStats.TimeZone              = JsonObject->GetNumberField(TEXT("timezone"));
     Callback(CityStats);
 }
 

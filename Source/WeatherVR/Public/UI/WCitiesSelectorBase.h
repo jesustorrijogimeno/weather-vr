@@ -43,6 +43,6 @@ protected:
 	TObjectPtr<UTextBlock> WindSpeedTextBlockProp;
 	UPROPERTY()
 	TObjectPtr<UTextBlock> CurrentTimeTextBlockProp;
-	void FillInCityStatsWidget(const FCityStats& CityStats) const;
+	void FillInCityStatsWidget(FCityStats& CityStats) const;
 	static float RoundFloat(float FloatToRound);
 };

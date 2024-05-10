@@ -34,6 +34,21 @@ struct FCityStats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int64 TimeZone;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int64 Sunrise;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int64 Sunset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDateTime Time;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDateTime SunriseTime;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDateTime SunsetTime;
+
 	FCityStats()
 	{
 		Condition = EWeatherConditions::Clear;
@@ -41,5 +56,7 @@ struct FCityStats
 		WindDirection = 0;
 		WindSpeed = 0;
 		TimeZone = 0;
+		Sunrise = 0;
+		Sunset = 0;
 	}
 };

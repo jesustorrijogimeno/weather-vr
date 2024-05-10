@@ -89,6 +89,7 @@ void UWWeatherService::ProcessCityWeatherStatsResponse(const FString& Response, 
     const TSharedPtr<FJsonObject> WeatherObject = WeatherArray[0]->AsObject();
     const TSharedPtr<FJsonObject> MainObject    = JsonObject->GetObjectField(TEXT("main"));
     const TSharedPtr<FJsonObject> WindObject    = JsonObject->GetObjectField(TEXT("wind"));
+    const TSharedPtr<FJsonObject> SysObject    = JsonObject->GetObjectField(TEXT("sys"));
     
     FCityStats CityStats;
     CityStats.Condition             = GetConditionEnum(WeatherObject->GetStringField(TEXT("main")));
@@ -98,6 +99,8 @@ void UWWeatherService::ProcessCityWeatherStatsResponse(const FString& Response, 
     CityStats.WindSpeed             = WindObject->GetNumberField(TEXT("speed"));
     CityStats.WindDirection         = WindObject->GetNumberField(TEXT("deg"));
     CityStats.TimeZone              = JsonObject->GetNumberField(TEXT("timezone"));
+    CityStats.Sunrise               = SysObject->GetNumberField(TEXT("sunrise"));
+    CityStats.Sunset                = SysObject->GetNumberField(TEXT("sunset"));
     Callback(CityStats);
 }
 

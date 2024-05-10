@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "UI/WCitiesSelectorBase.h"
 
+#include "Actors/Interfaces/WEnvironmentChanged.h"
 #include "Services/WWeatherService.h"
 #include "Services/Models/FCityStats.h"
 #include "UI/WButtonCityBase.h"
@@ -34,15 +35,21 @@ void UWCitiesSelectorBase::SubscribeButtons(
 			[this](const FString& CityName)
 				{
 					this->CityName = CityName;
-					UWWeatherService::FetchCityWeatherStats(CityName, [this](const FCityStats& CityStats)
+					UWWeatherService::FetchCityWeatherStats(CityName, [this](FCityStats CityStats)
 					{
 						FillInCityStatsWidget(CityStats);
+						for(TObjectIterator<UObject> Object; Object; ++Object)
+						{
+							if (!Object->Implements<UWEnvironmentChanged>()) continue;
+							const IWEnvironmentChanged* EnvironmentChanged = Cast<IWEnvironmentChanged>(*Object);
+							EnvironmentChanged->Execute_UpdateEnvironment(*Object, CityStats);
+						}
 					});
 				});
 	}
 }
 
-void UWCitiesSelectorBase::FillInCityStatsWidget(const FCityStats& CityStats) const
+void UWCitiesSelectorBase::FillInCityStatsWidget(FCityStats& CityStats) const
 {
 	this->CityTextBlockProp->SetText(FText::FromString(this->CityName));
 	this->TemperatureTextBlockProp->SetText(FText::FromString(FString::Printf(TEXT("%.2f F"), RoundFloat(CityStats.Temperature))));
@@ -51,6 +58,9 @@ void UWCitiesSelectorBase::FillInCityStatsWidget(const FCityStats& CityStats) co
 	this->WindSpeedTextBlockProp->SetText(FText::FromString(FString::Printf(TEXT("%.2f m/s"), RoundFloat(CityStats.WindSpeed))));
 	const FDateTime CurrentDate = FDateTime::UtcNow() + FTimespan(0, 0, CityStats.TimeZone);
 	this->CurrentTimeTextBlockProp->SetText(FText::FromString(CurrentDate.ToString()));
+	CityStats.Time = CurrentDate;
+	CityStats.SunriseTime	= FDateTime::FromUnixTimestamp(CityStats.Sunrise) + FTimespan(0, 0, CityStats.TimeZone);
+	CityStats.SunsetTime	= FDateTime::FromUnixTimestamp(CityStats.Sunset) + FTimespan(0, 0, CityStats.TimeZone);
 }
 
 float UWCitiesSelectorBase::RoundFloat(const float FloatToRound)

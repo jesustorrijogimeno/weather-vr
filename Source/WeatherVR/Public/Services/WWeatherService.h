@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <functional>
-
 #include "Models/EWeatherConditions.h"
 #include "WWeatherService.generated.h"
 

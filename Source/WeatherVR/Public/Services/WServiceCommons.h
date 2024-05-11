@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
-#include "UObject/NoExportTypes.h"
 #include "WServiceCommons.generated.h"
 
 /**

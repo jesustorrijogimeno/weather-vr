@@ -9,6 +9,7 @@ AWSkySystemBase::AWSkySystemBase()
 	TimeOfDay = 9;
 	Sunrise = 6;
 	Sunset = 18;
+	WeatherCondition = EWeatherConditions::Clear;
 }
 
 void AWSkySystemBase::Update_Implementation(const FCityStats CityStats)

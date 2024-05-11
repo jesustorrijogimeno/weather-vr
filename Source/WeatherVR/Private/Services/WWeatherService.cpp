@@ -29,7 +29,6 @@ void UWWeatherService::FetchCityCoordinates(const FString& City, TFunction<void(
 
 void UWWeatherService::ProcessCityCoordinatesResponse(const FString& Response, TFunction<void(double, double)> Callback)
 {
-    UE_LOG(LogTemp, Log, TEXT("%s"), *Response);
     const TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(Response);
     TArray<TSharedPtr<FJsonValue>> JsonResponseArray;
     if (!FJsonSerializer::Deserialize(JsonReader, JsonResponseArray))
@@ -71,7 +70,6 @@ void UWWeatherService::FetchCityWeatherStats(const double Lat, const double Lon,
 
 void UWWeatherService::ProcessCityWeatherStatsResponse(const FString& Response, TFunction<void(FCityStats)> Callback)
 {
-    UE_LOG(LogTemp, Log, TEXT("%s"), *Response);
     const TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(Response);
     TSharedPtr<FJsonObject> JsonObject;
     if (!FJsonSerializer::Deserialize(JsonReader, JsonObject))

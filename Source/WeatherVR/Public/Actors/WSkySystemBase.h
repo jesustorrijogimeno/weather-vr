@@ -16,12 +16,14 @@ public:
 	// Sets default values for this actor's properties
 	AWSkySystemBase();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin = "0.0", UIMax = "24.0"), Category="Settings")
 	float TimeOfDay;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin = "0.0", UIMax = "24.0"), Category="Settings")
 	float Sunrise;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin = "0.0", UIMax = "24.0"), Category="Settings")
 	float Sunset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	EWeatherConditions WeatherCondition;
 	
 	virtual void Update_Implementation(FCityStats CityStats) override;
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)

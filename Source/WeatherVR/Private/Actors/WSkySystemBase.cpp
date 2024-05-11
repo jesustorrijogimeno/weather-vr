@@ -11,11 +11,12 @@ AWSkySystemBase::AWSkySystemBase()
 	Sunset = 18;
 }
 
-void AWSkySystemBase::Update_Implementation(FCityStats CityStats)
+void AWSkySystemBase::Update_Implementation(const FCityStats CityStats)
 {
-	TimeOfDay = CityStats.Time.GetHour() + CityStats.Time.GetMinute() / 60.0f;
-	Sunrise = CityStats.SunriseTime.GetHour() + CityStats.SunriseTime.GetMinute() / 60.0f;
-	Sunset = CityStats.SunsetTime.GetHour() + CityStats.SunsetTime.GetMinute() / 60.0f;
+	TimeOfDay			= CityStats.Time.GetHour() + CityStats.Time.GetMinute() / 60.0f;
+	Sunrise				= CityStats.SunriseTime.GetHour() + CityStats.SunriseTime.GetMinute() / 60.0f;
+	Sunset				= CityStats.SunsetTime.GetHour() + CityStats.SunsetTime.GetMinute() / 60.0f;
+	WeatherCondition	= CityStats.Condition;
 	ConfigureDynamicSky();
 }
 

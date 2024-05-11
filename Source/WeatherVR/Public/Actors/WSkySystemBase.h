@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/WUpdateEnvironment.h"
 #include "WSkySystemBase.generated.h"
 
 UCLASS()
-class WEATHERVR_API AWSkySystemBase : public AActor
+class WEATHERVR_API AWSkySystemBase : public AActor, public IWUpdateEnvironment
 {
 	GENERATED_BODY()
 	
@@ -15,12 +16,14 @@ public:
 	// Sets default values for this actor's properties
 	AWSkySystemBase();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	float TimeOfDay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	float Sunrise;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	float Sunset;
+	
+	virtual void Update_Implementation(FCityStats CityStats) override;
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ConfigureDynamicSky();
 };

@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "UI/WCitiesSelectorBase.h"
-
-#include "Actors/Interfaces/WEnvironmentChanged.h"
+#include "Actors/Interfaces/WUpdateEnvironment.h"
 #include "Services/WWeatherService.h"
 #include "Services/Models/FCityStats.h"
 #include "UI/WButtonCityBase.h"
@@ -40,9 +39,9 @@ void UWCitiesSelectorBase::SubscribeButtons(
 						FillInCityStatsWidget(CityStats);
 						for(TObjectIterator<UObject> Object; Object; ++Object)
 						{
-							if (!Object->Implements<UWEnvironmentChanged>()) continue;
-							const IWEnvironmentChanged* EnvironmentChanged = Cast<IWEnvironmentChanged>(*Object);
-							EnvironmentChanged->Execute_UpdateEnvironment(*Object, CityStats);
+							if (!Object->Implements<UWUpdateEnvironment>()) continue;
+							const IWUpdateEnvironment* EnvironmentChanged = Cast<IWUpdateEnvironment>(*Object);
+							EnvironmentChanged->Execute_Update(*Object, CityStats);
 						}
 					});
 				});

@@ -6,22 +6,16 @@
 // Sets default values
 AWSkySystemBase::AWSkySystemBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+	TimeOfDay = 9;
+	Sunrise = 6;
+	Sunset = 18;
 }
 
-// Called when the game starts or when spawned
-void AWSkySystemBase::BeginPlay()
+void AWSkySystemBase::Update_Implementation(FCityStats CityStats)
 {
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AWSkySystemBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	TimeOfDay = CityStats.Time.GetHour() + CityStats.Time.GetMinute() / 60.0f;
+	Sunrise = CityStats.SunriseTime.GetHour() + CityStats.SunriseTime.GetMinute() / 60.0f;
+	Sunset = CityStats.SunsetTime.GetHour() + CityStats.SunsetTime.GetMinute() / 60.0f;
+	ConfigureDynamicSky();
 }
 
